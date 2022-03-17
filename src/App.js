@@ -1,4 +1,21 @@
 import React from "react";
+import "./App.css";
+
+function darkmode() {
+    const moon = "bi bi-moon-fill btn btn-sm btn-outline-dark mx-3";
+    const sun =
+        "bi bi-brightness-high-fill btn btn-sm btn-outline-light mx-3";
+    var toggler = document.getElementById("toggler");
+    toggler.className = toggler.className === sun ? moon : sun;
+
+    var table = document.getElementById("table");
+    table.className =
+        table.className === "table table-stripped table-hover"
+            ? "table table-stripped table-hover table-dark"
+            : "table table-stripped table-hover";
+    var element = document.body;
+    element.classList.toggle("dark-mode");
+}
 
 class App extends React.Component {
     constructor(props) {
@@ -17,10 +34,12 @@ class App extends React.Component {
     }
 
     handleSubmit() {
-        this.setState((state) => ({
-            input: "",
-            items: state.items.concat(state.input),
-        }));
+        if (this.state.input) {
+            this.setState((state) => ({
+                input: "",
+                items: state.items.concat(state.input),
+            }));
+        }
     }
 
     handleDelete(id) {
@@ -37,6 +56,12 @@ class App extends React.Component {
                 {/* page heading */}
                 <h1 className="text-center m-3 animate__animated animate__rubberBand">
                     To-Do App With React & Redux
+                    <i
+                        id="toggler"
+                        title="Toggle dark mode"
+                        className="bi bi-moon-fill btn btn-sm btn-outline-dark mx-3"
+                        onClick={darkmode}
+                    ></i>
                 </h1>
                 <div className="text-center">
                     {/* input and submit button */}
@@ -64,7 +89,10 @@ class App extends React.Component {
                 {/* render todo list items */}
                 <div className="w-50 mx-auto">
                     {/* in table form */}
-                    <table className="table table-stripped table-hover">
+                    <table
+                        id="table"
+                        className="table table-stripped table-hover"
+                    >
                         <thead>
                             <tr>
                                 <th
@@ -85,7 +113,7 @@ class App extends React.Component {
                                     <td className="text-end">
                                         <button
                                             type="button"
-                                            className="btn btn-outline-danger"
+                                            className="btn btn-sm btn-outline-danger"
                                             onClick={() =>
                                                 this.handleDelete(idx)
                                             }

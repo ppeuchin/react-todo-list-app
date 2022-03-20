@@ -1,5 +1,7 @@
 import React from "react";
 import "./App.css";
+import { Provider, connect } from 'react-redux';
+import { store, mapStateToProps, mapDispatchToProps } from './redux/store';
 
 function darkmode() {
     const moon = "bi bi-moon-fill btn btn-sm btn-outline-dark mx-3";
@@ -17,12 +19,12 @@ function darkmode() {
     element.classList.toggle("dark-mode");
 }
 
+// React
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            input: "",
-            items: [],
+            input: ""
         };
         this.handleDelete = this.handleDelete.bind(this);
     }
@@ -36,18 +38,14 @@ class App extends React.Component {
     handleSubmit() {
         if (this.state.input) {
             this.setState((state) => ({
-                input: "",
-                items: state.items.concat(state.input),
+                input: ""
             }));
+            this.props.addNewItem(this.state.input);
         }
     }
 
     handleDelete(id) {
-        this.setState((state) => ({
-            items: [...state.items].filter(
-                (item) => state.items.indexOf(item) !== id
-            ),
-        }));
+        this.props.deleteItem(id);
     }
 
     render() {
@@ -105,7 +103,7 @@ class App extends React.Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {this.state.items.map((item, idx) => (
+                            {this.props.items.map((item, idx) => (
                                 <tr className="animate__animated animate__fadeInLeft">
                                     <td key={idx} className="text-start">
                                         {item}
@@ -131,4 +129,17 @@ class App extends React.Component {
     }
 }
 
-export default App;
+// React-Redux
+const Container = connect(mapStateToProps, mapDispatchToProps)(App);
+
+class AppWrapper extends React.Component {
+    render() {
+        return (
+            <Provider store={store}>
+                <Container />
+            </Provider>
+        );
+    }
+};
+
+export default AppWrapper;
